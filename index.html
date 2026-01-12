@@ -1,57 +1,69 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monitoring Ayam Broiler</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Kandang Broiler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🐔 Monitoring Ayam Broiler</h1>
+<h2>Monitoring Ayam Broiler</h2>
 
-<!-- PILIH PERIODE -->
-<div class="box">
-    <label>Pilih Periode</label>
-    <select id="periodeSelect" onchange="gantiPeriode()"></select>
-    <button onclick="periodeBaru()">+ Periode Baru</button>
-</div>
-
-<!-- LOGIN PERIODE -->
-<div id="loginBox" class="box">
+<!-- LOGIN / MULAI PERIODE -->
+<div id="loginBox">
     <label>Jumlah Ayam Datang</label>
-    <small>Contoh: 33.000</small>
-    <input type="text" id="populasiAwal" placeholder="33.000">
+    <input id="populasiAwal" placeholder="contoh: 33.000">
     <button onclick="mulaiPeriode()">Mulai Periode</button>
 </div>
 
-<!-- HARIAN -->
-<div id="harianBox" class="box" style="display:none">
+<!-- INPUT HARIAN -->
+<div id="harianBox" style="display:none">
 
-<h3>Deplesi</h3>
-<div class="grid">
-    <input id="matiA1" placeholder="Mati A1">
-    <input id="matiB1" placeholder="Mati B1">
-    <input id="matiA2" placeholder="Mati A2">
-    <input id="matiB2" placeholder="Mati B2">
-</div>
+<h3>Input Harian</h3>
 
-<h3>Pakan (Karung)</h3>
-<input id="pakanTerima" placeholder="Terima">
-<input id="pakanPakai" placeholder="Terpakai">
+<label>Ayam Mati</label>
+<input id="mati" value="0">
+
+<label>Ayam Afkir</label>
+<input id="afkir" value="0">
+
+<label>Pakan Terima (karung)</label>
+<input id="pakanTerima" value="0">
+
+<label>Pakan Terpakai (karung)</label>
+<input id="pakanPakai" value="0">
 
 <button onclick="simpanHarian()">Simpan Harian</button>
 
-<div class="table-wrap">
+<h3>Rekap Harian</h3>
+
 <table>
-<thead>
-<tr>
-<th>Hari</th><th>Mati</th><th>Deplesi</th>
-<th>Sisa Ayam</th><th>Sisa Pakan</th>
-</tr>
-</thead>
-<tbody id="rekapTable"></tbody>
+    <thead>
+        <tr>
+            <th>Hari</th>
+            <th>Mati</th>
+            <th>Afkir</th>
+            <th>Sisa Ayam</th>
+            <th>Sisa Pakan</th>
+        </tr>
+    </thead>
+    <tbody id="tabelRekap"></tbody>
 </table>
+
+<h3>Panen</h3>
+<select id="panenSelect" onchange="tampilJenisPanen()">
+    <option value="">-- pilih --</option>
+    <option value="panen">Panen</option>
+</select>
+
+<div id="jenisPanenBox" style="display:none">
+    <select id="jenisPanen">
+        <option value="">Jenis Panen</option>
+        <option value="penjarangan">Penjarangan</option>
+        <option value="habis">Panen Habis</option>
+    </select>
+    <button onclick="simpanPanen()">Simpan Panen</button>
 </div>
 
 </div>
