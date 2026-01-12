@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoring Ayam Broiler</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🐔 Monitoring Ayam Broiler</h1>
+
+<!-- PILIH PERIODE -->
+<div class="box">
+    <label>Pilih Periode</label>
+    <select id="periodeSelect" onchange="gantiPeriode()"></select>
+    <button onclick="periodeBaru()">+ Periode Baru</button>
+</div>
+
+<!-- LOGIN PERIODE -->
+<div id="loginBox" class="box">
+    <label>Jumlah Ayam Datang</label>
+    <small>Contoh: 33.000</small>
+    <input type="text" id="populasiAwal" placeholder="33.000">
+    <button onclick="mulaiPeriode()">Mulai Periode</button>
+</div>
+
+<!-- HARIAN -->
+<div id="harianBox" class="box" style="display:none">
+
+<h3>Deplesi</h3>
+<div class="grid">
+    <input id="matiA1" placeholder="Mati A1">
+    <input id="matiB1" placeholder="Mati B1">
+    <input id="matiA2" placeholder="Mati A2">
+    <input id="matiB2" placeholder="Mati B2">
+</div>
+
+<h3>Pakan (Karung)</h3>
+<input id="pakanTerima" placeholder="Terima">
+<input id="pakanPakai" placeholder="Terpakai">
+
+<button onclick="simpanHarian()">Simpan Harian</button>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Hari</th><th>Mati</th><th>Deplesi</th>
+<th>Sisa Ayam</th><th>Sisa Pakan</th>
+</tr>
+</thead>
+<tbody id="rekapTable"></tbody>
+</table>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
