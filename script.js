@@ -1,95 +1,98 @@
-function parseAngka(v) {
+// ===== FUNGSI BACA ANGKA (33.000 → 33000)
+function angka(v) {
     if (!v) return 0;
-    return Number(v.replace(/\./g, ""));
+    return Number(v.toString().replace(/\./g, ""));
 }
 
-let data = JSON.parse(localStorage.getItem("DATA_KANDANG")) || {};
-let periodeAktif = null;
+// ===== VARIABEL GLOBAL
+let populasiAwal = 0;
+let totalDeplesi = 0;
+let hari = 0;
+let sisaPakan = 0;
+let rekap = [];
 
-function simpan() {
-    localStorage.setItem("DATA_KANDANG", JSON.stringify(data));
-}
-
-function periodeBaru() {
-    periodeAktif = "Periode " + new Date().toLocaleString();
-    data[periodeAktif] = {
-        populasi: 0,
-        hari: 0,
-        sisaPakan: 0,
-        totalDeplesi: 0,
-        rekap: []
-    };
-    simpan();
-    loadPeriode();
-}
-
-function loadPeriode() {
-    const select = document.getElementById("periodeSelect");
-    select.innerHTML = "";
-    Object.keys(data).forEach(p => {
-        const o = document.createElement("option");
-        o.value = p;
-        o.textContent = p;
-        select.appendChild(o);
-    });
-    if (periodeAktif) select.value = periodeAktif;
-}
-
-function gantiPeriode() {
-    periodeAktif = document.getElementById("periodeSelect").value;
-    render();
-}
-
+// ===== MULAI PERIODE
 function mulaiPeriode() {
-    const pop = parseAngka(document.getElementById("populasiAwal").value);
-    if (pop <= 0) return alert("Jumlah ayam salah");
-    data[periodeAktif].populasi = pop;
-    simpan();
+    populasiAwal = angka(document.getElementById("populasiAwal").value);
+
+    if (populasiAwal <= 0) {
+        alert("Jumlah ayam tidak valid");
+        return;
+    }
+
+    // RESET
+    totalDeplesi = 0;
+    hari = 0;
+    sisaPakan = 0;
+    rekap = [];
+
     document.getElementById("loginBox").style.display = "none";
     document.getElementById("harianBox").style.display = "block";
 }
 
+// ===== SIMPAN DATA HARIAN
 function simpanHarian() {
-    const d = data[periodeAktif];
-    const mati =
-        parseAngka(matiA1.value) +
-        parseAngka(matiB1.value) +
-        parseAngka(matiA2.value) +
-        parseAngka(matiB2.value);
+    hari++;
 
-    const terima = parseAngka(pakanTerima.value);
-    const pakai = parseAngka(pakanPakai.value);
+    const mati = angka(document.getElementById("mati").value);
+    const afkir = angka(document.getElementById("afkir").value);
 
-    d.totalDeplesi += mati;
-    d.hari++;
-    d.sisaPakan = d.sisaPakan + terima - pakai;
+    totalDeplesi += (mati + afkir);
 
-    d.rekap.push({
-        hari: d.hari,
+    let sisaAyam = populasiAwal - totalDeplesi;
+    if (sisaAyam < 0) sisaAyam = 0;
+
+    const terima = angka(document.getElementById("pakanTerima").value);
+    const pakai = angka(document.getElementById("pakanPakai").value);
+
+    sisaPakan = sisaPakan + terima - pakai;
+    if (sisaPakan < 0) sisaPakan = 0;
+
+    rekap.push({
+        hari,
         mati,
-        sisaAyam: d.populasi - d.totalDeplesi,
-        sisaPakan: d.sisaPakan
+        afkir,
+        sisaAyam,
+        sisaPakan
     });
 
-    simpan();
-    render();
+    renderTabel();
 }
 
-function render() {
-    const d = data[periodeAktif];
-    if (!d) return;
-
-    const tbody = document.getElementById("rekapTable");
+// ===== TAMPILKAN TABEL (TIDAK TERBALIK)
+function renderTabel() {
+    const tbody = document.getElementById("tabelRekap");
     tbody.innerHTML = "";
-    d.rekap.forEach(r => {
+
+    rekap.forEach(d => {
         tbody.innerHTML += `
         <tr>
-            <td>${r.hari}</td>
-            <td>${r.mati}</td>
-            <td>${r.sisaAyam.toLocaleString("id-ID")}</td>
-            <td>${r.sisaPakan}</td>
+            <td>${d.hari}</td>
+            <td>${d.mati.toLocaleString("id-ID")}</td>
+            <td>${d.afkir.toLocaleString("id-ID")}</td>
+            <td>${d.sisaAyam.toLocaleString("id-ID")}</td>
+            <td>${d.sisaPakan.toLocaleString("id-ID")}</td>
         </tr>`;
     });
 }
 
-loadPeriode();
+// ===== PANEN
+function tampilJenisPanen() {
+    document.getElementById("jenisPanenBox").style.display = "block";
+}
+
+function simpanPanen() {
+    const jenis = document.getElementById("jenisPanen").value;
+
+    if (!jenis) {
+        alert("Pilih jenis panen");
+        return;
+    }
+
+    if (jenis === "habis") {
+        alert("Periode selesai");
+        location.reload();
+    } else {
+        alert("Panen penjarangan dicatat");
+    }
+}
